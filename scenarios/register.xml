@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- REGISTER with Digest authentication.
+     When security.authentication=digest, the engine answers the server's
+     401 challenge automatically with the configured lab credentials and this
+     scenario simply waits for the final 200 OK. The provisional 401 is
+     accepted as optional in case the server challenges. -->
+<scenario name="register">
+  <send request="REGISTER"/>
+  <recv response="401" optional="true"/>
+  <recv response="200"/>
+</scenario>

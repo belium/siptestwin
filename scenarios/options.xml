@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- OPTIONS keepalive / capability probe. Expects a 200 OK.
+     Uses the built-in send form: the engine constructs the request from the
+     identity/target configuration. -->
+<scenario name="options">
+  <send request="OPTIONS"/>
+  <recv response="200"/>
+</scenario>

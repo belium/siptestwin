@@ -1,0 +1,76 @@
+# SIPTestWin example configuration.
+#
+# Copy this file, point it at a target you OWN or are explicitly AUTHORIZED to
+# test, and list that target under security.authorized_targets. An active run
+# refuses to start against a target that is not on the allow-list.
+
+target:
+  host: "127.0.0.1"        # the SIP server under test (lab only here)
+  port: 5060
+  transport: "udp"          # udp | tcp | tls
+
+identity:
+  from_user: "tester"
+  from_domain: "lab.example"
+  to_user: "1001"
+  contact_user: "tester"
+  # display_name: "SIPTestWin"
+  # to_domain: "lab.example"   # defaults to target.host when omitted
+
+execution:
+  scenario: "scenarios/options.xml"
+  calls: 5
+  concurrency: 1
+  call_rate: 2              # calls per second
+  timeout_seconds: 5
+  duration_seconds: 0       # 0 = bounded by 'calls' rather than time
+  # local_host: "192.0.2.5" # Via/Contact host; autodetected if omitted
+  # local_port: 0           # 0 = OS-assigned ephemeral source port
+
+security:
+  authentication: "disabled"   # disabled | digest
+  # username: "tester"
+  # password: "labpass"         # lab credentials only; never real secrets
+  verify_tls: true
+  require_confirmation: true
+  authorized_targets:
+    - "127.0.0.1"             # loopback lab
+    # - "192.0.2.0/24"        # example authorized lab network (CIDR allowed)
+
+reporting:
+  output_dir: "results"
+  formats:
+    - "json"
+    - "csv"
+
+# Optional: trace / capture every SIP message sent and received.
+# Also available as CLI flags: --capture --pcap --trace-console --trace-file.
+# capture:
+#   enabled: true
+#   console: true        # one line per message on screen
+#   console_full: false  # also print the full message
+#   text: true           # write <file>.trace.log (human-readable)
+#   pcap: true           # write <file>.pcap (open in Wireshark)
+#   file: null           # base path; default results/trace-<timestamp>
+
+# Optional: parametrize built-in requests and the INVITE body/headers.
+# Header values accept placeholders ([call_id], [local_ip], [$var], ...).
+# message:
+#   extra_headers:                 # added to every built-in request
+#     Subject: "SIPTestWin test"
+#     X-Lab: "ci-run-42"
+#   remove_headers:                # stripped from every built-in request
+#     - "User-Agent"
+#   invite:
+#     content_type: "application/sdp"
+#     extra_headers:               # added only to INVITE
+#       Priority: "urgent"
+#     sdp: |                       # custom SDP body (overrides the generated one)
+#       v=0
+#       o=siptestwin 0 0 IN IP4 [local_ip]
+#       s=Custom Session
+#       c=IN IP4 [local_ip]
+#       t=0 0
+#       m=audio 40000 RTP/AVP 0
+#       a=rtpmap:0 PCMU/8000
+#       a=sendrecv

@@ -1,0 +1,28 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+*.spec
+.venv/
+venv/
+
+# ---- Pruebas / cobertura ----
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ---- Salida de ejecuciones (reportes, trazas, capturas, auditoría) ----
+results/
+*.pcap
+*.trace.log
+audit.log
+
+# ---- Editores / SO ----
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini

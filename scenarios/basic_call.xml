@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Basic call: INVITE -> (100/180) -> 200 -> ACK -> BYE -> 200.
+     The engine builds the ACK and BYE from the dialog established by the 200
+     response (correct tags, CSeq and request target). -->
+<scenario name="basic_call">
+  <send request="INVITE"/>
+  <recv response="100" optional="true"/>
+  <recv response="180" optional="true"/>
+  <recv response="200"/>
+  <send request="ACK"/>
+  <pause milliseconds="200"/>
+  <send request="BYE"/>
+  <recv response="200"/>
+</scenario>

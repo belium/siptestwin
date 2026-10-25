@@ -1,0 +1,112 @@
+{
+  "tool": "SIPTestWin",
+  "target": "127.0.0.1:55060",
+  "scenario": "basic_call",
+  "transport": "udp",
+  "mode": "active",
+  "started_at": "2026-10-25T11:38:23",
+  "duration_seconds": 1.52,
+  "summary": {
+    "calls_total": 3,
+    "passed": 3,
+    "failed": 0
+  },
+  "metrics": {
+    "messages_sent": 9,
+    "messages_received": 12,
+    "retransmissions": 0,
+    "transport_errors": 0,
+    "timeouts": 0,
+    "calls_attempted": 3,
+    "calls_established": 3,
+    "calls_terminated": 3,
+    "transactions_completed": 3,
+    "transactions_failed": 0,
+    "response_codes": {
+      "100": 3,
+      "180": 3,
+      "200": 6
+    },
+    "response_by_category": {
+      "1xx": 6,
+      "2xx": 6
+    },
+    "failure_reasons": {},
+    "latency": {
+      "count": 0,
+      "min_ms": 0.0,
+      "p50_ms": 0.0,
+      "p95_ms": 0.0,
+      "p99_ms": 0.0,
+      "max_ms": 0.0
+    }
+  },
+  "calls": [
+    {
+      "index": 0,
+      "outcome": "passed",
+      "final_code": 200,
+      "reason": null,
+      "latency_ms": 203.26,
+      "steps_completed": 8
+    },
+    {
+      "index": 1,
+      "outcome": "passed",
+      "final_code": 200,
+      "reason": null,
+      "latency_ms": 203.42,
+      "steps_completed": 8
+    },
+    {
+      "index": 2,
+      "outcome": "passed",
+      "final_code": 200,
+      "reason": null,
+      "latency_ms": 203.12,
+      "steps_completed": 8
+    }
+  ],
+  "config": {
+    "target": {
+      "host": "127.0.0.1",
+      "port": 55060,
+      "transport": "udp"
+    },
+    "identity": {
+      "from_user": "tester",
+      "from_domain": "lab.example",
+      "to_user": "1001",
+      "to_domain": null,
+      "contact_user": "tester",
+      "display_name": null
+    },
+    "execution": {
+      "scenario": "scenarios/basic_call.xml",
+      "calls": 3,
+      "concurrency": 1,
+      "call_rate": 2,
+      "timeout_seconds": 5,
+      "duration_seconds": 0,
+      "local_host": null,
+      "local_port": 0
+    },
+    "security": {
+      "authentication": "disabled",
+      "username": null,
+      "verify_tls": true,
+      "authorized_targets": [
+        "127.0.0.1"
+      ],
+      "require_confirmation": true,
+      "password": null
+    },
+    "reporting": {
+      "output_dir": "results",
+      "formats": [
+        "json",
+        "csv"
+      ]
+    }
+  }
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- INVITE with per-send header and body parametrization.
+     <header name="X" > sets/overrides a header; action="remove" strips one.
+     <body content-type="..."> replaces the generated SDP. Header and body
+     values support placeholders ([call_id], [local_ip], [$var], ...). -->
+<scenario name="invite_custom">
+  <send request="INVITE">
+    <header name="Subject">SIPTestWin custom INVITE</header>
+    <header name="Priority">urgent</header>
+    <header name="X-Test-Id">[call_id]</header>
+    <header name="User-Agent">SIPTestWin-Lab/0.1</header>
+    <header name="Allow" action="remove"/>
+    <body content-type="application/sdp"><![CDATA[
+v=0
+o=siptestwin 0 0 IN IP4 [local_ip]
+s=Custom Session
+c=IN IP4 [local_ip]
+t=0 0
+m=audio 40000 RTP/AVP 0
+a=rtpmap:0 PCMU/8000
+a=sendrecv
+]]></body>
+  </send>
+  <recv response="100" optional="true"/>
+  <recv response="180" optional="true"/>
+  <recv response="200"/>
+  <send request="ACK"/>
+  <send request="BYE"/>
+  <recv response="200"/>
+</scenario>

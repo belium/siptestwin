@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SIPTestWin — Documentación</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --panel:#ffffff; --ink:#1b2330; --muted:#5b6676;
+    --line:#e3e7ed; --brand:#1f6feb; --brand-ink:#0b4bbd;
+    --code-bg:#0f172a; --code-ink:#e2e8f0; --accent:#0d9488; --warn-bg:#fff7ed; --warn-ink:#9a3412; --warn-line:#fdba74;
+    --radius:12px;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0e1116; --panel:#161b22; --ink:#e6edf3; --muted:#9aa7b4;
+      --line:#283039; --brand:#4f93ff; --brand-ink:#8bb6ff;
+      --code-bg:#0b0f16; --code-ink:#d7e2f0; --warn-bg:#2a1c0f; --warn-ink:#f4b183; --warn-line:#7c4a1e;
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  a{color:var(--brand);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;
+    background:var(--panel);border-right:1px solid var(--line);padding:24px 18px}
+  nav .brand{font-weight:800;font-size:20px;letter-spacing:.3px}
+  nav .brand span{color:var(--brand)}
+  nav .ver{color:var(--muted);font-size:12px;margin-bottom:18px}
+  nav a{display:block;color:var(--muted);padding:6px 10px;border-radius:8px;font-size:14px}
+  nav a:hover{background:var(--bg);color:var(--ink);text-decoration:none}
+  nav .grp{margin-top:16px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:0 10px}
+  main{padding:40px min(6vw,64px);max-width:980px}
+  h1{font-size:34px;margin:.2em 0 .1em}
+  h2{font-size:24px;margin:1.8em 0 .5em;padding-top:12px;border-top:1px solid var(--line)}
+  h3{font-size:18px;margin:1.4em 0 .4em}
+  p,li{color:var(--ink)}
+  .lede{font-size:18px;color:var(--muted)}
+  code{font-family:"SF Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+    background:rgba(127,127,127,.15);padding:.12em .4em;border-radius:5px;font-size:.9em}
+  pre{background:var(--code-bg);color:var(--code-ink);padding:16px 18px;border-radius:var(--radius);
+    overflow:auto;font-family:"SF Mono",ui-monospace,"Cascadia Code",Consolas,monospace;font-size:13.5px;line-height:1.55}
+  pre code{background:none;padding:0;color:inherit;font-size:inherit}
+  table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:rgba(127,127,127,.08);font-weight:700}
+  .note,.warn{border-radius:var(--radius);padding:14px 16px;margin:1.2em 0;font-size:15px}
+  .note{background:rgba(31,111,235,.08);border:1px solid rgba(31,111,235,.3)}
+  .warn{background:var(--warn-bg);color:var(--warn-ink);border:1px solid var(--warn-line)}
+  .pill{display:inline-block;background:var(--accent);color:#fff;font-size:11px;font-weight:700;
+    padding:2px 8px;border-radius:999px;vertical-align:middle;margin-left:6px}
+  .ok{color:var(--accent);font-weight:700}
+  .no{color:#dc2626;font-weight:700}
+  footer{color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:48px;padding-top:18px}
+  .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:1em 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px}
+  .card h4{margin:.1em 0 .3em;font-size:15px}
+  .card p{margin:0;color:var(--muted);font-size:14px}
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr}
+    nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+    main{padding:28px 20px}
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav>
+    <div class="brand">SIP<span>TestWin</span></div>
+    <div class="ver">v0.1.0 · Windows 10/11</div>
+    <a href="#inicio">Inicio</a>
+    <a href="#instalacion">Instalación</a>
+    <a href="#cli">CLI</a>
+    <div class="grp">Referencia</div>
+    <a href="#configuracion">Configuración</a>
+    <a href="#escenarios">Escenarios</a>
+    <a href="#invite">Parametrizar INVITE y headers</a>
+    <a href="#captura">Trazar / capturar SIP</a>
+    <a href="#ips">Elegir la IP local</a>
+    <div class="grp">Operación</div>
+    <a href="#seguridad">Seguridad</a>
+    <a href="#build">Build .exe (Windows)</a>
+    <a href="#metricas">Métricas y reportes</a>
+  </nav>
+
+  <main>
+    <section id="inicio">
+      <h1>SIPTestWin</h1>
+      <p class="lede">Herramienta profesional de pruebas SIP (RFC 3261) para Windows, inspirada en SIPp:
+        interoperabilidad, conformidad de protocolo, carga controlada y robustez — desde PowerShell, CMD o CI,
+        sin WSL ni máquina virtual Linux.</p>
+
+      <div class="warn">
+        <strong>Uso autorizado.</strong> SIPTestWin es para sistemas que posees o tienes permiso explícito para probar.
+        Aplica lista blanca de destinos, límites de tasa/concurrencia/duración, modo simulación por defecto,
+        confirmación antes de pruebas activas, redacción de credenciales y registro de auditoría.
+        No incluye fuerza bruta, inundación sin límites, fraude telefónico ni explotación automática de terceros.
+      </div>
+
+      <div class="cols">
+        <div class="card"><h4>Motor SIP</h4><p>Máquina de estados de transacciones y diálogos, temporizadores y retransmisión UDP.</p></div>
+        <div class="card"><h4>Métodos</h4><p>OPTIONS · REGISTER · INVITE · ACK · CANCEL · BYE, con Digest.</p></div>
+        <div class="card"><h4>Transportes</h4><p>UDP, TCP y TLS opcional.</p></div>
+        <div class="card"><h4>Escenarios</h4><p>Subconjunto XML compatible con SIPp + forma integrada.</p></div>
+      </div>
+    </section>
+
+    <section id="instalacion">
+      <h2>Instalación</h2>
+      <p>Requiere Python 3.12+. Crea el entorno virtual <strong>fuera</strong> de carpetas sincronizadas (OneDrive) para evitar bloqueos de archivos.</p>
+<pre><code>py -m venv C:\Users\tu_usuario\.venvs\siptestwin
+C:\Users\tu_usuario\.venvs\siptestwin\Scripts\Activate.ps1
+pip install --upgrade pip
+pip install -e .            # dependencias de ejecución
+pip install -e ".[dev]"     # + pytest y pyinstaller</code></pre>
+      <p>Comprueba la instalación y el entorno:</p>
+<pre><code>siptestwin version
+siptestwin doctor</code></pre>
+      <div class="note"><code>doctor</code> valida la versión de Python, las dependencias, el enlace de sockets UDP
+      y muestra avisos de firewall/puertos de Windows.</div>
+    </section>
+
+    <section id="cli">
+      <h2>CLI</h2>
+      <table>
+        <tr><th>Comando</th><th>Descripción</th></tr>
+        <tr><td><code>version</code></td><td>Imprime la versión.</td></tr>
+        <tr><td><code>validate-config --config c.yaml</code></td><td>Carga y valida estrictamente la configuración.</td></tr>
+        <tr><td><code>validate-scenario --file s.xml</code></td><td>Analiza y valida un escenario.</td></tr>
+        <tr><td><code>run --config c.yaml</code></td><td>Ejecuta un escenario. <strong>Simulación por defecto</strong>; <code>--execute</code> transmite.</td></tr>
+        <tr><td><code>report --input results/</code></td><td>Resume reportes JSON previos.</td></tr>
+        <tr><td><code>testserver --port 5060</code></td><td>Servidor SIP de prueba local (loopback).</td></tr>
+        <tr><td><code>interfaces</code></td><td>Lista las IPs locales disponibles para trazar / como origen.</td></tr>
+        <tr><td><code>doctor</code></td><td>Diagnóstico del entorno.</td></tr>
+      </table>
+
+      <div class="warn"><strong>Es una herramienta de línea de comandos, no una app con ventana.</strong>
+        No la abras con doble clic (la consola parpadea y se cierra). Ejecútala desde PowerShell.</div>
+
+      <h3>Ejemplo de principio a fin (loopback)</h3>
+<pre><code># Terminal 1 — servidor de prueba local
+siptestwin testserver --port 55060
+
+# Terminal 2 — validar, simular y ejecutar
+siptestwin validate-config   --config config\example.yaml
+siptestwin validate-scenario --file scenarios\basic_call.xml
+siptestwin run --config config\example.yaml --scenario scenarios\basic_call.xml ^
+  --host 127.0.0.1 --port 55060 --calls 3            # simulación
+siptestwin run --config config\example.yaml --scenario scenarios\basic_call.xml ^
+  --host 127.0.0.1 --port 55060 --calls 3 --execute  # transmite de verdad</code></pre>
+
+      <h3>Overrides por línea de comandos</h3>
+<pre><code>--host --port --transport --scenario --calls --concurrency --call-rate
+--output-dir --authorize &lt;host|cidr&gt; (repetible)
+--execute   # enviar paquetes (por defecto: simular)
+--yes       # omitir la confirmación de ejecución activa</code></pre>
+
+      <h3>Códigos de salida</h3>
+      <table>
+        <tr><th>Código</th><th>Significado</th></tr>
+        <tr><td>0</td><td>Éxito (todas las llamadas OK o simulación completa).</td></tr>
+        <tr><td>1</td><td>Cancelado por el usuario / nada que hacer.</td></tr>
+        <tr><td>2</td><td>Configuración o escenario inválidos.</td></tr>
+        <tr><td>3</td><td>Destino no autorizado.</td></tr>
+        <tr><td>4</td><td>Ejecución completa pero con llamadas fallidas.</td></tr>
+      </table>
+    </section>
+
+    <section id="configuracion">
+      <h2>Configuración</h2>
+      <p>YAML o JSON. Todo parámetro operativo vive aquí; no hace falta tocar código. Se validan tipos, rangos y combinaciones incompatibles, y el destino debe ser explícito.</p>
+
+      <h3>target <span class="pill">requerido</span></h3>
+      <table>
+        <tr><th>Campo</th><th>Tipo</th><th>Defecto</th></tr>
+        <tr><td>host</td><td>string</td><td>—</td></tr>
+        <tr><td>port</td><td>int 1–65535</td><td>5060</td></tr>
+        <tr><td>transport</td><td>udp / tcp / tls</td><td>udp</td></tr>
+      </table>
+
+      <h3>identity</h3>
+      <table>
+        <tr><th>Campo</th><th>Defecto</th></tr>
+        <tr><td>from_user</td><td>tester</td></tr>
+        <tr><td>from_domain</td><td>lab.example</td></tr>
+        <tr><td>to_user</td><td>1001</td></tr>
+        <tr><td>to_domain</td><td>host del destino</td></tr>
+        <tr><td>contact_user</td><td>tester</td></tr>
+        <tr><td>display_name</td><td>—</td></tr>
+      </table>
+
+      <h3>execution</h3>
+      <table>
+        <tr><th>Campo</th><th>Rango</th><th>Defecto</th></tr>
+        <tr><td>scenario</td><td>ruta</td><td>— (requerido)</td></tr>
+        <tr><td>calls</td><td>1–100000</td><td>1</td></tr>
+        <tr><td>concurrency</td><td>1–500 (≤ calls)</td><td>1</td></tr>
+        <tr><td>call_rate</td><td>&gt;0 ≤500 /s</td><td>1.0</td></tr>
+        <tr><td>timeout_seconds</td><td>&gt;0</td><td>5</td></tr>
+        <tr><td>duration_seconds</td><td>0–86400 (0 = por calls)</td><td>0</td></tr>
+        <tr><td>local_host / local_port</td><td>—</td><td>autodetectado / efímero</td></tr>
+      </table>
+
+      <h3>security</h3>
+      <table>
+        <tr><th>Campo</th><th>Defecto</th><th>Notas</th></tr>
+        <tr><td>authentication</td><td>disabled</td><td>disabled / digest</td></tr>
+        <tr><td>username / password</td><td>—</td><td>Solo credenciales de laboratorio; se redactan en logs/reportes.</td></tr>
+        <tr><td>verify_tls</td><td>true</td><td></td></tr>
+        <tr><td>authorized_targets</td><td>[]</td><td>Hosts, IPs o CIDR. <strong>Vacío = nada autorizado.</strong></td></tr>
+        <tr><td>require_confirmation</td><td>true</td><td></td></tr>
+      </table>
+
+      <h3>reporting</h3>
+      <table>
+        <tr><th>Campo</th><th>Defecto</th></tr>
+        <tr><td>output_dir</td><td>results</td></tr>
+        <tr><td>formats</td><td>[json] (json/csv)</td></tr>
+      </table>
+
+      <h3>message <span class="pill">opcional</span></h3>
+      <p>Parametriza las peticiones integradas y el cuerpo/headers del INVITE. Los valores de header admiten
+      placeholders (<code>[call_id]</code>, <code>[local_ip]</code>, <code>[$var]</code>, …).</p>
+      <table>
+        <tr><th>Campo</th><th>Descripción</th></tr>
+        <tr><td>extra_headers</td><td>Mapa de headers añadidos a <em>toda</em> petición integrada.</td></tr>
+        <tr><td>remove_headers</td><td>Lista de headers eliminados de toda petición integrada.</td></tr>
+        <tr><td>invite.content_type</td><td>Content-Type del cuerpo del INVITE (defecto application/sdp).</td></tr>
+        <tr><td>invite.sdp</td><td>Cuerpo SDP personalizado (sustituye al generado).</td></tr>
+        <tr><td>invite.extra_headers</td><td>Headers añadidos solo al INVITE.</td></tr>
+      </table>
+    </section>
+
+    <section id="escenarios">
+      <h2>Escenarios</h2>
+      <p>Documentos XML que describen un flujo UAC. Subconjunto documentado de SIPp más una forma integrada cómoda.</p>
+
+      <h3>Elementos</h3>
+      <table>
+        <tr><th>Elemento</th><th>Uso</th></tr>
+        <tr><td><code>&lt;send request="OPTIONS"/&gt;</code></td><td>Forma integrada: el motor construye la petición desde la configuración.</td></tr>
+        <tr><td><code>&lt;send&gt;&lt;![CDATA[ … ]]&gt;&lt;/send&gt;</code></td><td>Forma plantilla: mensaje SIP crudo con <code>[placeholders]</code>.</td></tr>
+        <tr><td><code>&lt;recv response="200"/&gt;</code></td><td>Espera un código; atributos <code>optional</code>, <code>timeout</code> (ms), <code>request="BYE"</code>.</td></tr>
+        <tr><td><code>&lt;pause milliseconds="200"/&gt;</code></td><td>Espera (interrumpible con Ctrl+C).</td></tr>
+        <tr><td><code>&lt;action&gt;&lt;ereg …/&gt;&lt;/action&gt;</code></td><td>Extrae campos a variables: <code>regexp</code>, <code>search_in</code>, <code>header</code>, <code>assign_to</code>.</td></tr>
+      </table>
+
+      <h3>Placeholders (plantilla y valores de header/body)</h3>
+<pre><code>[call_id] [branch] [cseq] [local_ip] [local_port] [remote_ip] [remote_port]
+[transport] [from_user] [from_domain] [from_tag] [to_user] [to_domain]
+[contact_user] [service] [len]   y   [$nombre]  (variable extraída por &lt;ereg&gt;)</code></pre>
+
+      <h3>Matriz de compatibilidad con SIPp</h3>
+      <table>
+        <tr><th>Función SIPp</th><th>Estado</th></tr>
+        <tr><td>&lt;send&gt; con mensaje crudo + placeholders</td><td class="ok">Soportado (subconjunto)</td></tr>
+        <tr><td>&lt;recv&gt; response/request, optional, timeout</td><td class="ok">Soportado</td></tr>
+        <tr><td>&lt;pause&gt;</td><td class="ok">Soportado</td></tr>
+        <tr><td>&lt;ereg&gt; extracción a variables</td><td class="ok">Parcial (regex acotada)</td></tr>
+        <tr><td>Autenticación Digest</td><td class="ok">Soportado (auto)</td></tr>
+        <tr><td>&lt;header&gt;/&lt;body&gt; por &lt;send&gt;</td><td class="ok">Soportado (extensión)</td></tr>
+        <tr><td>sendCmd / recvCmd (procesos externos)</td><td class="no">No (por seguridad)</td></tr>
+        <tr><td>3PCC / media RTP</td><td class="no">No (solo señalización)</td></tr>
+        <tr><td>Modos de inundación / tasa ilimitada</td><td class="no">No (límites forzados)</td></tr>
+      </table>
+    </section>
+
+    <section id="invite">
+      <h2>Parametrizar INVITE y modificar headers</h2>
+      <p>Hay dos niveles, combinables. El de escenario (por <code>&lt;send&gt;</code>) tiene prioridad sobre el global.</p>
+
+      <h3>1 · Por escenario (recomendado)</h3>
+      <p>Dentro de un <code>&lt;send request="INVITE"&gt;</code> (o cualquier método integrado) puedes añadir, sobrescribir o eliminar headers y reemplazar el cuerpo:</p>
+<pre><code>&lt;send request="INVITE"&gt;
+  &lt;header name="Subject"&gt;SIPTestWin custom INVITE&lt;/header&gt;
+  &lt;header name="Priority"&gt;urgent&lt;/header&gt;
+  &lt;header name="X-Test-Id"&gt;[call_id]&lt;/header&gt;        &lt;!-- placeholder --&gt;
+  &lt;header name="User-Agent"&gt;SIPTestWin-Lab/0.1&lt;/header&gt;
+  &lt;header name="Allow" action="remove"/&gt;             &lt;!-- eliminar header --&gt;
+  &lt;body content-type="application/sdp"&gt;&lt;![CDATA[
+v=0
+o=siptestwin 0 0 IN IP4 [local_ip]
+s=Custom Session
+c=IN IP4 [local_ip]
+t=0 0
+m=audio 40000 RTP/AVP 0
+a=rtpmap:0 PCMU/8000
+a=sendrecv
+]]&gt;&lt;/body&gt;
+&lt;/send&gt;</code></pre>
+      <ul>
+        <li><code>&lt;header name="X"&gt;valor&lt;/header&gt;</code> — añade o sobrescribe el header <code>X</code>.</li>
+        <li><code>&lt;header name="X" action="remove"/&gt;</code> — elimina el header <code>X</code>.</li>
+        <li><code>&lt;body content-type="…"&gt;…&lt;/body&gt;</code> — reemplaza el cuerpo; <code>Content-Length</code> se recalcula solo.</li>
+        <li>Valores de header y body admiten placeholders (<code>[call_id]</code>, <code>[local_ip]</code>, <code>[$var]</code>, …).</li>
+      </ul>
+      <p>Escenario de ejemplo incluido: <code>scenarios/invite_custom.xml</code>.</p>
+
+      <h3>2 · Global por configuración</h3>
+      <p>Aplica a todas las peticiones integradas de la ejecución (útil para marcar un run de CI o cambiar el SDP por defecto):</p>
+<pre><code>message:
+  extra_headers:                 # añadidos a toda petición integrada
+    Subject: "SIPTestWin test"
+    X-Lab: "ci-run-42"
+  remove_headers:                # eliminados de toda petición integrada
+    - "User-Agent"
+  invite:
+    content_type: "application/sdp"
+    extra_headers:               # añadidos solo al INVITE
+      Priority: "urgent"
+    sdp: |                       # cuerpo SDP personalizado (sustituye al generado)
+      v=0
+      o=siptestwin 0 0 IN IP4 [local_ip]
+      s=Custom Session
+      c=IN IP4 [local_ip]
+      t=0 0
+      m=audio 40000 RTP/AVP 0
+      a=rtpmap:0 PCMU/8000
+      a=sendrecv</code></pre>
+
+      <h3>Precedencia</h3>
+      <p>De menor a mayor: headers base → <code>message.extra_headers</code> → <code>message.invite.extra_headers</code> (solo INVITE) → <code>&lt;header&gt;</code> del escenario. Las eliminaciones (config y luego escenario) se aplican al final.</p>
+
+      <div class="warn"><strong>Pruebas de robustez:</strong> eliminar un header obligatorio (p. ej. <code>Via</code> o <code>Call-ID</code>)
+        es posible a propósito para comprobar cómo responde el servidor, pero romperá la correlación de respuestas
+        (el motor enruta por Call-ID), así que esos casos suelen terminar en timeout — comportamiento esperado.</div>
+
+      <h3>Verificar y ejecutar</h3>
+<pre><code>siptestwin validate-scenario --file scenarios\invite_custom.xml
+siptestwin run --config config\example.yaml --scenario scenarios\invite_custom.xml ^
+  --host 127.0.0.1 --port 55060 --calls 1 --execute</code></pre>
+    </section>
+
+    <section id="captura">
+      <h2>Trazar / capturar mensajes SIP</h2>
+      <p>SIPTestWin puede registrar cada mensaje SIP enviado y recibido en tres destinos combinables:</p>
+      <ul>
+        <li><strong>Consola</strong> — una línea por mensaje (escalera de la llamada), con opción de mensaje completo.</li>
+        <li><strong>Texto</strong> — un <code>.trace.log</code> legible con marcas de tiempo (los hashes de credenciales se redactan).</li>
+        <li><strong>pcap</strong> — una captura que se abre en <strong>Wireshark</strong>; no necesita tshark ni npcap. Cada mensaje se envuelve en Ethernet/IPv4/UDP sintéticos para que Wireshark lo diseccione como SIP.</li>
+      </ul>
+
+      <h3>Por configuración</h3>
+<pre><code>capture:
+  enabled: true
+  console: true        # una línea por mensaje en pantalla
+  console_full: false  # imprimir también el mensaje completo
+  text: true           # escribir &lt;file&gt;.trace.log
+  pcap: true           # escribir &lt;file&gt;.pcap (Wireshark)
+  file: "results/mytrace"   # base; por defecto results/trace-&lt;timestamp&gt;</code></pre>
+
+      <h3>Por línea de comandos</h3>
+<pre><code>siptestwin run -c config\example.yaml --scenario scenarios\basic_call.xml ^
+  --host 127.0.0.1 --port 55060 --execute ^
+  --trace-console --pcap --trace-file results\mytrace
+
+# Genera: results\mytrace.trace.log  y  results\mytrace.pcap
+# Abre el pcap en Wireshark para ver toda la señalización SIP.</code></pre>
+      <table>
+        <tr><th>Flag</th><th>Efecto</th></tr>
+        <tr><td><code>--capture</code></td><td>Escribe el <code>.trace.log</code> de texto.</td></tr>
+        <tr><td><code>--pcap</code></td><td>Escribe el <code>.pcap</code> para Wireshark.</td></tr>
+        <tr><td><code>--trace-console</code></td><td>Imprime cada mensaje en consola.</td></tr>
+        <tr><td><code>--trace-full</code></td><td>Con <code>--trace-console</code>, imprime el mensaje completo.</td></tr>
+        <tr><td><code>--trace-file &lt;base&gt;</code></td><td>Ruta base de salida.</td></tr>
+      </table>
+      <div class="note">SIP Digest nunca transmite la contraseña en claro, así que el pcap (captura real del cable) no contiene secretos en texto plano; aun así, en la traza de texto se redacta el <code>response=</code> por coherencia con la política de auditoría.</div>
+    </section>
+
+    <section id="ips">
+      <h2>Elegir la IP local (origen)</h2>
+      <p>La IP de origen (usada en Via/Contact y para el enlace del socket) es <code>execution.local_host</code>.
+      Lista las IPs disponibles en esta máquina y elige una, o pon una manualmente:</p>
+<pre><code>siptestwin interfaces
+#    Local IPv4 addresses
+#  +--------------+----------+
+#  | IP           | Type     |
+#  | 192.168.1.26 | private  |
+#  | 192.168.56.1 | private  |
+#  | 127.0.0.1    | loopback |
+#  +--------------+----------+
+
+siptestwin run -c config\example.yaml --local-host 192.168.1.26 ...</code></pre>
+      <p>Si la dejas sin definir, se autodetecta la IP de la ruta por defecto. También puedes fijarla en el YAML
+      (<code>execution.local_host</code>) o pasarla manualmente con <code>--local-host</code>.</p>
+    </section>
+
+    <section id="seguridad">
+      <h2>Seguridad</h2>
+      <ul>
+        <li><strong>Lista blanca explícita:</strong> una ejecución activa se rechaza si <code>target.host</code> no está en <code>security.authorized_targets</code>. Vacío = nada autorizado; una IP privada no implica autorización.</li>
+        <li><strong>Ejecución acotada:</strong> <code>calls</code>, <code>concurrency</code>, <code>call_rate</code> y <code>duration_seconds</code> tienen topes forzados (100000 / 500 / 500/s / 86400s).</li>
+        <li><strong>Modos:</strong> simulación por defecto (no transmite); <code>--execute</code> transmite tras mostrar destino/límites y pedir confirmación.</li>
+        <li><strong>Credenciales:</strong> solo se responde a un desafío Digest legítimo con credenciales de laboratorio; se redactan de logs/reportes. Sin adivinación ni fuerza bruta.</li>
+        <li><strong>Auditoría:</strong> cada ejecución activa añade líneas a <code>&lt;output_dir&gt;/audit.log</code>.</li>
+        <li><strong>XML/YAML seguro:</strong> se rechazan DOCTYPE/entidades (sin XXE), regex acotada, <code>yaml.safe_load</code>.</li>
+      </ul>
+    </section>
+
+    <section id="build">
+      <h2>Build del ejecutable (Windows)</h2>
+<pre><code>pip install pyinstaller
+pyinstaller --onefile --name siptestwin ^
+  --collect-submodules siptestwin ^
+  --paths src ^
+  src\siptestwin\__main__.py
+
+dist\siptestwin.exe version
+dist\siptestwin.exe doctor</code></pre>
+      <p>Para distribuir sin Python, entrega <code>dist\siptestwin.exe</code> junto con tus <code>config\*.yaml</code> y <code>scenarios\*.xml</code>.</p>
+      <div class="note">Si el arranque de <code>--onefile</code> es lento o el antivirus lo marca, usa <code>--onedir</code> y distribuye la carpeta <code>dist\siptestwin\</code> completa.</div>
+    </section>
+
+    <section id="metricas">
+      <h2>Métricas y reportes</h2>
+      <p>Cada ejecución genera JSON y/o CSV en <code>results/</code> y un resumen en consola con:</p>
+      <ul>
+        <li>Mensajes enviados/recibidos, retransmisiones, timeouts, errores de transporte.</li>
+        <li>Respuestas por categoría (1xx…6xx) y latencia p50/p95/p99.</li>
+        <li>Transacciones completadas/fallidas y llamadas intentadas/establecidas/terminadas.</li>
+        <li>Motivos de fallo, diferenciando fallo del servidor de error local del generador.</li>
+      </ul>
+    </section>
+
+    <footer>
+      SIPTestWin v0.1.0 · Licencia MIT · Úsalo con responsabilidad y solo donde estés autorizado.
+    </footer>
+  </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "siptestwin"
+version = "0.1.0"
+description = "Professional SIP penetration / interoperability testing tool for Windows (SIPp-inspired)"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "SIPTestWin contributors" }]
+keywords = ["sip", "voip", "rfc3261", "pentest", "qa", "sipp"]
+classifiers = [
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Security",
+    "Topic :: Communications :: Telephony",
+]
+dependencies = [
+    "typer>=0.12,<1.0",
+    "PyYAML>=6.0,<7.0",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+tls = []
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "pyinstaller>=6.0",
+]
+
+[project.scripts]
+siptestwin = "siptestwin.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "integration: integration tests that use the local loopback test server",
+]

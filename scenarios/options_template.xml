@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Template form of OPTIONS, demonstrating SIPp-style [placeholders].
+     The engine substitutes placeholders and sends the raw message verbatim,
+     giving full control over header content. Supported placeholders are
+     documented in docs/scenarios.md. -->
+<scenario name="options_template">
+  <send><![CDATA[
+OPTIONS sip:[remote_ip]:[remote_port] SIP/2.0
+Via: SIP/2.0/[transport] [local_ip]:[local_port];branch=[branch];rport
+Max-Forwards: 70
+From: "SIPTestWin" <sip:[from_user]@[from_domain]>;tag=[from_tag]
+To: <sip:[to_user]@[to_domain]>
+Call-ID: [call_id]
+CSeq: [cseq] OPTIONS
+Contact: <sip:[contact_user]@[local_ip]:[local_port]>
+Accept: application/sdp
+User-Agent: SIPTestWin/0.1
+Content-Length: 0
+
+]]></send>
+  <recv response="200"/>
+</scenario>
